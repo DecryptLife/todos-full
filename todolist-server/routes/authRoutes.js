@@ -1,5 +1,8 @@
 const router = require("express").Router();
 const jwt = require("jsonwebtoken");
+const dotenv = require("dotenv");
+
+dotenv.config();
 
 const users = [];
 let id = 1;
@@ -25,11 +28,16 @@ router.post("/register", (req, res) => {
 router.post("/login", (req, res) => {
   const { username, password } = req.body;
 
+  console.log(`username: ${username} , password: ${password} `);
+  console.log("Login : ", process.env.JWT_SECRET);
   const user = users.find((user) => {
     return user.username === username;
   });
 
+  console.log("User: ", user);
+
   if (!user) {
+    console.log("user not found");
     return res.status(400).send("User not found");
   }
 

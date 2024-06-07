@@ -1,12 +1,14 @@
 const router = require("express").Router();
 const dotenv = require("dotenv");
+const isVerified = require("../middleware/isVerified");
 console.log("In todo router");
 
 dotenv.config();
 
 const todos = [];
 
-router.get("/", (req, res) => {
+router.get("/", isVerified, (req, res) => {
+  console.log("TODOS: ", process.env.JWT_SECRET);
   res.send(todos);
 });
 
