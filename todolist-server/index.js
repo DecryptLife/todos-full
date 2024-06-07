@@ -11,7 +11,7 @@ dotenv.config();
 app.use(express.json());
 
 app.use("/auth", authRoutes);
-app.use("/todos", todoRoutes);
+app.use("/todos", isVerified, todoRoutes);
 
 app.get("/", (req, res) => {
   res.send("hello");

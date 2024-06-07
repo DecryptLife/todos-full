@@ -7,7 +7,7 @@ dotenv.config();
 
 const todos = [];
 
-router.get("/", isVerified, (req, res) => {
+router.get("/", (req, res) => {
   console.log("TODOS: ", process.env.JWT_SECRET);
   res.send(todos);
 });
@@ -24,10 +24,18 @@ router.delete("/:todoId", (req, res) => {
   const id = req.params.todoId;
   console.log(id);
   const todoId = parseInt(id);
+
+  // check if user owns todo
+
   const index = todos.findIndex((todo) => {
     return parseInt(todo.id) === parseInt(todoId);
   });
 
+  if (parseInt(todos[index].userId) !== parseInt(req.user.id)) {
+    return res
+      .status(401)
+      .send({ message: "Can't update/delete todo owned by another user" });
+  }
   if (index === -1) {
     res
       .status(400)
@@ -50,6 +58,12 @@ router.patch("/:todoId", (req, res) => {
   });
 
   console.log(index);
+
+  if (parseInt(todos[index].userId) !== parseInt(req.user.id)) {
+    return res
+      .status(401)
+      .send({ message: "Can't update/delete todo owned by another user" });
+  }
 
   if (index === -1) {
     res.status(400).send({ message: `Todo with id: ${todoId} does not exist` });
