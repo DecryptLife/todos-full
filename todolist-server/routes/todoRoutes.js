@@ -13,6 +13,7 @@ router.get("/", (req, res) => {
 });
 
 router.post("/", (req, res) => {
+  console.log("New todo server called");
   const newTodo = { ...req.body };
 
   todos.push(newTodo);

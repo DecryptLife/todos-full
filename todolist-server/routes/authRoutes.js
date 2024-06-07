@@ -9,6 +9,7 @@ let id = 1;
 
 // register
 router.post("/register", (req, res) => {
+  console.log("In user register");
   try {
     const { username, password } = req.body;
     const newUser = {
@@ -18,7 +19,7 @@ router.post("/register", (req, res) => {
     };
     id += 1;
     users.push(newUser);
-    res.send(`${username} registration completed`);
+    res.json({ message: `${newUser.user} registered successfully` });
   } catch (e) {
     res.status(500).json({ error: "Registration failed" });
   }
@@ -38,11 +39,11 @@ router.post("/login", (req, res) => {
 
   if (!user) {
     console.log("user not found");
-    return res.status(400).send("User not found");
+    return res.status(400).json({ message: "User not found" });
   }
 
   if (user.password !== password) {
-    return res.status(400).send("Passwords do not match");
+    return res.status(400).send({ message: "Passwords do not match" });
   }
 
   const token = jwt.sign(
@@ -51,7 +52,9 @@ router.post("/login", (req, res) => {
     { expiresIn: "1h" }
   );
 
-  res.send({ token });
+  res.cookie("jwtToken", token, { httpOnly: true, secure: true }); // Use secure: true for HTTPS
+
+  res.status(200).json({ message: "Login successful" });
 });
 
 module.exports = router;
