@@ -18,11 +18,12 @@ router.post("/", (req, res) => {
 });
 
 router.delete("/:todoId", (req, res) => {
-  const { id } = req.params;
-
+  console.log(req.params);
+  const id = req.params.todoId;
+  console.log(id);
   const todoId = parseInt(id);
   const index = todos.findIndex((todo) => {
-    return todo.id === todoId;
+    return parseInt(todo.id) === parseInt(todoId);
   });
 
   if (index === -1) {
@@ -38,20 +39,22 @@ router.delete("/:todoId", (req, res) => {
 });
 
 router.patch("/:todoId", (req, res) => {
-  const { id } = req.params;
+  const id = req.params.todoId;
   const todoId = parseInt(id);
   const partialTodo = req.body.content;
 
   const index = todos.findIndex((todo) => {
-    return todo.id === todoId;
+    return parseInt(todo.id) === parseInt(todoId);
   });
+
+  console.log(index);
 
   if (index === -1) {
     res.status(400).send({ message: `Todo with id: ${todoId} does not exist` });
     return;
   } else {
     todos[index].content = partialTodo;
-    res.send(todos[todoId]);
+    res.send({ message: "todo updated successfully" });
   }
 });
 
